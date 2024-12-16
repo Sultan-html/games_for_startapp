@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Игры: Камень, ножницы, бумага и Крестики-нолики</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+
+    h1 {
+      color: #444;
+    }
+
+    .game {
+      margin-top: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .rps-buttons button, .ttt-cell, button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    .rps-buttons button:hover, button:hover {
+      background: #0056b3;
+    }
+
+    .ttt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .ttt-cell {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #333;
+      font-size: 32px;
+      font-weight: bold;
+      background: #fff;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .ttt-cell:hover {
+      background: #e0e0e0;
+      transform: scale(1.1);
+    }
+
+    .ttt-cell.taken {
+      cursor: not-allowed;
+      background: #ddd;
+    }
+
+    #result, #winner {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #winner {
+      font-size: 18px;
+      color: #28a745;
+    }
+
+    button.reset {
+      margin-top: 15px;
+      background: #dc3545;
+    }
+
+    button.reset:hover {
+      background: #b02a37;
+    }
+  </style>
+</head>
+<body>
+  <h1>Добро пожаловать в Игровую Зону!</h1>
+
+  <!-- Камень, ножницы, бумага -->
+  <div class="game">
+    <h2>Камень, ножницы, бумага</h2>
+    <div class="rps-buttons">
+      <button onclick="playRPS('Камень')">Камень</button>
+      <button onclick="playRPS('Ножницы')">Ножницы</button>
+      <button onclick="playRPS('Бумага')">Бумага</button>
+    </div>
+    <p id="result">Выберите вариант, чтобы начать игру.</p>
+  </div>
+
+  <!-- Крестики-нолики -->
+  <div class="game">
+    <h2>Крестики-нолики</h2>
+    <div class="ttt-grid" id="tttGrid">
+      <div class="ttt-cell" onclick="makeMove(0)"></div>
+      <div class="ttt-cell" onclick="makeMove(1)"></div>
+      <div class="ttt-cell" onclick="makeMove(2)"></div>
+      <div class="ttt-cell" onclick="makeMove(3)"></div>
+      <div class="ttt-cell" onclick="makeMove(4)"></div>
+      <div class="ttt-cell" onclick="makeMove(5)"></div>
+      <div class="ttt-cell" onclick="makeMove(6)"></div>
+      <div class="ttt-cell" onclick="makeMove(7)"></div>
+      <div class="ttt-cell" onclick="makeMove(8)"></div>
+    </div>
+    <p id="winner">Играйте, чтобы узнать победителя.</p>
+    <button class="reset" onclick="resetGame()">Сбросить игру</button>
+  </div>
+
+  <script>
+    // Камень, ножницы, бумага
+    function playRPS(playerChoice) {
+      const choices = ['Камень', 'Ножницы', 'Бумага'];
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+      let result = '';
+
+      if (playerChoice === computerChoice) {
+        result = `Ничья! Вы оба выбрали ${playerChoice}.`;
+      } else if (
+        (playerChoice === 'Камень' && computerChoice === 'Ножницы') ||
+        (playerChoice === 'Ножницы' && computerChoice === 'Бумага') ||
+        (playerChoice === 'Бумага' && computerChoice === 'Камень')
+      ) {
+        result = `Вы выиграли! ${playerChoice} побеждает ${computerChoice}.`;
+      } else {
+        result = `Вы проиграли! ${computerChoice} побеждает ${playerChoice}.`;
+      }
+
+      document.getElementById('result').textContent = result;
+    }
+
+    // Крестики-нолики
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    const winningCombinations = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // горизонтали
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // вертикали
+      [0, 4, 8], [2, 4, 6]             // диагонали
+    ];
+
+    function makeMove(index) {
+      if (!gameActive || board[index] !== '') return;
+
+      board[index] = currentPlayer;
+      const cells = document.querySelectorAll('.ttt-cell');
+      cells[index].textContent = currentPlayer;
+      cells[index].classList.add('taken');
+
+      if (checkWinner()) {
+        document.getElementById('winner').textContent = `Победитель: ${currentPlayer}`;
+        gameActive = false;
+        return;
+      }
+
+      if (board.every(cell => cell !== '')) {
+        document.getElementById('winner').textContent = 'Ничья!';
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+
+    function checkWinner() {
+      return winningCombinations.some(combination => {
+        return combination.every(index => board[index] === currentPlayer);
+      });
+    }
+
+    function resetGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      gameActive = true;
+      document.getElementById('winner').textContent = 'Играйте, чтобы узнать победителя.';
+      const cells = document.querySelectorAll('.ttt-cell');
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('taken');
+      });
+    }
+  </script>
+</body>
+</html>
