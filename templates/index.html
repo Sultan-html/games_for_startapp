@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Игры: Камень, ножницы, бумага и Крестики-нолики</title>
+  <title>Игровая Зона</title>
   <style>
+    /* Основные стили */
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin: 20px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       background: linear-gradient(135deg, #74ebd5, #ACB6E5);
       color: #333;
     }
@@ -18,8 +24,11 @@
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
 
+    /* Стиль для игр */
     .game {
-      margin: 20px auto;
+      width: 100%;
+      max-width: 400px;
+      margin: 10px;
       padding: 20px;
       border-radius: 10px;
       background: #fff;
@@ -27,15 +36,14 @@
     }
 
     button {
-      font-size: 20px;
+      font-size: 18px;
       padding: 10px 20px;
       margin: 10px;
-      border-radius: 5px;
       border: none;
-      cursor: pointer;
-      color: #fff;
+      border-radius: 5px;
       background: #007bff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      color: #fff;
+      cursor: pointer;
       transition: background 0.3s, transform 0.2s;
     }
 
@@ -44,32 +52,56 @@
       transform: scale(1.05);
     }
 
-    button:active {
-      transform: scale(0.95);
-    }
-
-    #result, #winner {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
-
     .rps-buttons {
       display: flex;
       justify-content: center;
       gap: 10px;
+      margin-top: 10px;
     }
 
     .rps-buttons button {
       font-size: 18px;
       padding: 15px;
       border-radius: 50%;
+      width: 80px;
+      height: 80px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Крестики-нолики */
+    .ttt-board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      margin: 0 auto;
+      justify-content: center;
+    }
+
+    .ttt-cell {
       width: 100px;
       height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #333;
+      font-size: 32px;
+      font-weight: bold;
+      background: #f9f9f9;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .ttt-cell:hover {
+      background: #e0e0e0;
+      transform: scale(1.05);
+    }
+
+    #winner {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -79,37 +111,30 @@
   <!-- Камень, ножницы, бумага -->
   <div class="game">
     <h2>Камень, ножницы, бумага</h2>
-    <div id="rps-game">
-      <button id="startRPS" onclick="startRPS()">Начать игру</button>
-      <div class="rps-buttons hidden" id="rps-buttons">
-        <button class="rock" onclick="playRPS('Камень')">✊</button>
-        <button class="scissors" onclick="playRPS('Ножницы')">✌️</button>
-        <button class="paper" onclick="playRPS('Бумага')">🖐</button>
-      </div>
-      <p id="result">Нажмите "Начать игру", чтобы играть!</p>
+    <button onclick="startRPS()">Начать игру</button>
+    <div class="rps-buttons hidden" id="rps-buttons">
+      <button onclick="playRPS('Камень')">✊</button>
+      <button onclick="playRPS('Ножницы')">✌️</button>
+      <button onclick="playRPS('Бумага')">🖐</button>
     </div>
+    <p id="result">Нажмите "Начать игру", чтобы играть!</p>
   </div>
 
   <!-- Крестики-нолики -->
   <div class="game">
     <h2>Крестики-нолики</h2>
-    <div id="ttt-game">
-      <button id="startTTT" onclick="startTTT()">Начать игру</button>
-      <div class="hidden" id="ttt-board">
-        <div style="display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; margin: 10px auto;">
-          <div class="ttt-cell" onclick="makeMove(0)"></div>
-          <div class="ttt-cell" onclick="makeMove(1)"></div>
-          <div class="ttt-cell" onclick="makeMove(2)"></div>
-          <div class="ttt-cell" onclick="makeMove(3)"></div>
-          <div class="ttt-cell" onclick="makeMove(4)"></div>
-          <div class="ttt-cell" onclick="makeMove(5)"></div>
-          <div class="ttt-cell" onclick="makeMove(6)"></div>
-          <div class="ttt-cell" onclick="makeMove(7)"></div>
-          <div class="ttt-cell" onclick="makeMove(8)"></div>
-        </div>
-        <p id="winner">Нажмите "Начать игру"!</p>
-      </div>
+    <div class="ttt-board" id="ttt-board">
+      <div class="ttt-cell" onclick="makeMove(0)"></div>
+      <div class="ttt-cell" onclick="makeMove(1)"></div>
+      <div class="ttt-cell" onclick="makeMove(2)"></div>
+      <div class="ttt-cell" onclick="makeMove(3)"></div>
+      <div class="ttt-cell" onclick="makeMove(4)"></div>
+      <div class="ttt-cell" onclick="makeMove(5)"></div>
+      <div class="ttt-cell" onclick="makeMove(6)"></div>
+      <div class="ttt-cell" onclick="makeMove(7)"></div>
+      <div class="ttt-cell" onclick="makeMove(8)"></div>
     </div>
+    <p id="winner"></p>
   </div>
 
   <script>
@@ -142,13 +167,7 @@
     // Крестики-нолики
     let board = ['', '', '', '', '', '', '', '', ''];
     let currentPlayer = 'X';
-    let gameActive = false;
-
-    function startTTT() {
-      resetGame();
-      document.getElementById('ttt-board').classList.remove('hidden');
-      gameActive = true;
-    }
+    let gameActive = true;
 
     function makeMove(index) {
       if (!gameActive || board[index]) return;
@@ -174,20 +193,12 @@
     function checkWinner() {
       const winCombos = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],
-        [0, 4, 8], [2, 4, 6]
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]
       ];
 
       return winCombos.some(combo =>
         combo.every(index => board[index] === currentPlayer)
       );
-    }
-
-    function resetGame() {
-      board = ['', '', '', '', '', '', '', '', ''];
-      currentPlayer = 'X';
-      document.getElementById('winner').textContent = '';
-      document.querySelectorAll('.ttt-cell').forEach(cell => (cell.textContent = ''));
     }
   </script>
 </body>
